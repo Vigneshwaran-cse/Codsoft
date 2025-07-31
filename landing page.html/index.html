@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Events!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --meesho-pink: #ff0793;
+      --violet: #6c00ff;
+      --main-bg: #fff0fb;
+      --deep-purple: #8100dd;
+      --text: #24123d;
+    }
+    body {
+      margin:0; font-family:'Segoe UI',Arial,sans-serif; background:var(--main-bg); color:var(--text);
+    }
+    header {
+      background: linear-gradient(90deg, var(--meesho-pink) 40%, var(--violet) 90%);
+      color: #fff;
+      padding: 32px 0 12px 0;
+      text-align: center;
+      border-bottom-left-radius: 42px;
+      border-bottom-right-radius: 42px;
+      box-shadow: 0 4px 28px #ff30a870;
+      position: relative;
+    }
+    .meesho-logo {
+      width: 68px; height: 68px; vertical-align: middle;
+      margin-bottom: -15px; margin-right: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px #ff079340;
+      background: #fff;
+      padding: 3px;
+    }
+    h1 {
+      font-size: 2.4em; margin:20px 0 7px 0;
+    }
+    .subtitle {
+      font-size: 1.15em; color: #ffeef6; margin-bottom:17px;
+      text-shadow:1px 1px 7px #a02e6cf0;
+    }
+    nav {
+      margin: 0 auto 12px auto; display:flex; justify-content:center; gap:22px;
+    }
+    nav a {
+      color: #fff; text-decoration: none; font-weight:500;
+      padding:7px 18px; background:rgba(255,255,255,0.08);
+      border-radius:22px; transition: background 0.25s;
+    }
+    nav a:hover {
+      background: #fff; color:var(--meesho-pink); font-weight: bold;
+    }
+    .main-event {
+      max-width:670px;
+      background: #fff;
+      border-radius: 22px;
+      margin: 38px auto 0 auto;
+      box-shadow: 0 4px 20px #e59fd975;
+      padding:38px 36px 28px 36px;
+      font-size: 1.15em;
+    }
+    .main-event h2 {
+      color:var(--meesho-pink);
+      font-size:1.4em;
+      margin-bottom:14px;
+    }
+    .meesho-highlight {
+      background:linear-gradient(90deg,#fff0fb 58%,#ffd9f6 150%);
+      border-radius:14px;
+      padding: 18px 18px 16px 18px;
+      margin-top: 22px;
+      margin-bottom:25px;
+      box-shadow:0 2px 10px #fdeff6, 0 1px 8px #ff52a017;
+      display:flex; align-items:center; gap:18px;
+    }
+    .meesho-icon {
+      width:46px; height:46px; border-radius:50%; background:#fff; padding:3px; box-shadow:0 1px 11px #ff079350;
+    }
+    .meesho-details {
+      font-size:1.11em; color:var(--deep-purple);
+    }
+    .event-list {
+      margin:20px 0 0 0; padding:0; list-style:none;
+    }
+    .event-list li {
+      background: #ffe9fa;
+      border-left: 4px solid var(--meesho-pink);
+      margin-bottom:16px; padding:14px 17px;
+      border-radius:9px; font-size:1.08em;
+      box-shadow:0 1px 10px #fff3fa60;
+    }
+    .event-list li strong { color:var(--deep-purple);}
+    .buy-btn {
+      display:inline-block; margin: 33px 0 0 0;
+      padding:12px 38px;
+      background: linear-gradient(90deg, var(--meesho-pink) 60%, var(--violet) 120%);
+      color: #fff; border:none;
+      border-radius:25px; font-weight:bold;
+      font-size:1.1em; box-shadow:0 2px 14px #a03ea4a6;
+      cursor:pointer; transition:box-shadow 0.22s, background 0.22s;
+    }
+    .buy-btn:hover {
+      background: linear-gradient(90deg, var(--deep-purple) 45%, var(--meesho-pink));
+      box-shadow:0 7px 24px #ff07a847;
+    }
+    footer {
+      margin-top:54px; background:var(--meesho-pink); color:#fff;
+      text-align:center; font-size:1.1em;
+      padding:18px 0 7px 0;
+      border-top-left-radius: 34px;
+      border-top-right-radius: 34px;
+      letter-spacing: 0.04em;
+    }
+    @media (max-width:700px){
+      .main-event{padding:19px 7vw;}
+      .meesho-highlight{flex-direction:column;gap:8px;}
+      .meesho-icon{margin-bottom:7px;}
+      nav { gap:10px;}
+      .main-event{margin:24px 3vw;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://images.meesho.com/images/marketing/1661417516766.png" alt="Meesho Logo" class="meesho-logo" />
+    <h1>Don't Miss Any Events!</h1>
+    <div class="subtitle">Stay Updated · Enjoy Every Moment with <b>Meesho</b></div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#events">Events</a>
+      <a href="#meesho">Meesho</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+  <center>
+    <h1>Upcoming Events 🗓️</h1>
+    <p>Don`t miss any events.Stay Updated</p>
+    <hr>
+    </center>
+    <p >Stay updated with our exciting upcoming events! Discover special offers, fun activities, and exclusive deals. We're constantly working to bring you new ways to enjoy moments with Meesho.</p>
+    
+    <center>
+    
+    <img src="img/Meesho.jpg">
+
+  <main>
+    <section class="main-event" id="events">
+      <h2>📅 Shop & Celebrate Every Occasion!</h2>
+      <ul class="event-list">
+        <li><strong>Latest Promotions:</strong> Grab hot deals & exclusive offers available for a limited time.</li>
+        <li><strong>Upcoming Shopping Festivals:</strong> Don’t miss special festival events, flash sales, & surprise rewards.</li>
+        <li><strong>Order Tracking:</strong> Enjoy fast delivery, real-time order updates, and a gift-unboxing experience every time!</li>
+      </ul>
+      <div class="meesho-highlight" id="meesho">
+        <img src="https://images.meesho.com/images/marketing/1661417516766.png" alt="Meesho Icon" class="meesho-icon"/>
+        <div class="meesho-details">
+          <b>Shopping on Meesho:</b><br>
+          Turn casual scrolling into a joyful spree! Get trendy tops, cute accessories, and much more delivered fast to your doorstep.<br>
+          Every parcel feels like a little gift from you, to you. <span style="color:#8100dd;font-weight:bold;">Experience happiness, convenience, and surprise—only with Meesho!</span>
+        </div>
+      </div>
+      <a href="https://www.meesho.com/" class="buy-btn" target="_blank">Shop on Meesho</a>
+    </section>
+  </main>
+
+  <footer>&copy; 2025 Vigneshwaran &mdash; Stay updated and shop joyfully with Meesho!</footer>
+</body>
+</html>

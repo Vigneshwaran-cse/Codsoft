@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>K Vigneshwaran | Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts: Poppins + Charlesworth -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=charlesworth:400" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f4f9;
+            color: #333;
+            margin: 0;
+        }
+        header {
+            background: linear-gradient(135deg,#ff6f61,#ffcc00);
+            padding: 6rem 1rem 4rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0,100% 0,100% 90%,0 100%);
+        }
+        nav {
+            background: #333;
+            text-align: center;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            transition: color 0.3s, transform 0.3s, background 0.3s;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+        nav a.active, nav a:focus {
+            color: #333;
+            background: #ffcc00;
+        }
+        nav a:hover:not(.active) {
+            color: #ffcc00;
+            transform: scale(1.1);
+        }
+        section {
+            display: none;
+            max-width: 900px;
+            margin: 40px auto;
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+            padding: 2.7rem 2.5rem;
+            transition: box-shadow 0.3s, transform 0.3s;
+            position: relative;
+        }
+        section.active {
+            display: flex;
+            align-items: center;
+            min-height: 380px;
+        }
+        #about.active {
+            flex-direction: row;
+            justify-content: flex-start;
+            gap: 2.6rem;
+        }
+        #about .profile-pic {
+            width: 210px;
+            height: 210px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid #ff6f61;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+            flex-shrink: 0;
+            background: #fff;
+        }
+        .about-info {
+            flex: 1;
+        }
+        .about-info h2 {
+            color: #222;
+            font-family: 'Charlesworth', 'Pacifico', cursive, sans-serif;
+            font-size: 2.9rem;
+            font-weight: 400;
+            margin-bottom: 0.8rem;
+            text-align: left;
+            letter-spacing: 1px;
+        }
+        .about-info p {
+            margin-bottom: 1.6rem;
+            font-size: 1.16rem;
+        }
+        .resume-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6f61 60%, #ffcc00 100%);
+            color: #fff;
+            font-size: 1.15rem;
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.09);
+            transition: background 0.25s;
+            text-decoration: none;
+        }
+        .resume-btn:hover {
+            background: linear-gradient(135deg, #ffcc00 60%, #ff6f61 100%);
+            color: #333;
+        }
+
+        section:not(#about).active {
+            display: block;
+            min-height: 340px;
+        }
+        .section-heading {
+            opacity: 0;
+            transform: translateX(55%);
+            transition: opacity 0.55s cubic-bezier(.47,1.64,.41,.8), transform 0.55s cubic-bezier(.47,1.64,.41,.8);
+            font-size: 2.3rem;
+            color: #ff6f61;
+            margin-bottom: 1.25rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        section.active .section-heading {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        section.slide-left .section-heading {
+            transform: translateX(-55%);
+            opacity: 0;
+        }
+        section.slide-left.active .section-heading {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+            text-align: center;
+            margin: 0 auto;
+        }
+        ul li {
+            display: inline-block;
+            background: #ffcc00;
+            color: #333;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .project {
+            border: 1px solid #ddd;
+            padding: 1.4rem 1.25rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            background: #faf2dd;
+        }
+        .project h3 {
+            color: #333;
+            font-size: 1.35rem;
+            margin-bottom: 0.35rem;
+        }
+        .project p {
+            color: #555;
+            margin-top: 0.19rem;
+        }
+        .edu-detail {
+            font-size: 1.16rem;
+            margin-top: 1.6rem;
+            text-align: center;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 26px;
+            margin-top: 28px;
+        }
+        .social-icons a {
+            transition: transform 0.3s;
+        }
+        .social-icons a:hover {
+            transform: scale(1.18);
+        }
+        .social-icons img {
+            width: 40px;
+            height: 40px;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #333;
+            color: white;
+            margin-top: 2rem;
+            clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%);
+        }
+        footer p {
+            font-size: 1rem;
+        }
+        @media (max-width: 950px) {
+            section { padding: 1.2rem 0.4rem; }
+        }
+        @media (max-width: 650px) {
+            #about.active {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.2rem;
+            }
+            #about .profile-pic { width:100px; height:100px; margin-bottom: 0.8rem; }
+            .about-info h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        
+        
+        <h1 style="font-family:'Charlesworth','Pacifico',cursive,sans-serif; font-size:3.1rem; letter-spacing:1px; margin-bottom:0.2rem;">
+            K Vigneshwaran
+        </h1>
+        <p>Computer Science Engineering | Second Year</p>
+    </header>
+    <nav>
+        <a href="#" data-section="about" class="active">About</a>
+        <a href="#" data-section="skills">Skills</a>
+        <a href="#" data-section="projects">Projects</a>
+        <a href="#" data-section="education">Education</a>
+        <a href="#" data-section="contact">Contact</a>
+    </nav>
+    <section id="about" class="active">
+        <img src="img/profile photo.jpg" alt="Profile Photo" class="profile-pic" style="display:none;">
+        <div class="about-info">
+            <h2>About Me</h2>
+            <p>Hello! I am K Vigneshwaran, a Second-year CSE department, studying in Dhaanish Ahmed College of Engineering, Chennai and passionate about coding, problem-solving, and creating small games. I’m also learning programming and Japanese!</p>
+            <a href="https://drive.google.com/file/d/1MTlz2M80h7sZT0gnmwgHcdFy0wS0jTeb/view?usp=drivesdk" class="resume-btn" target="_blank">Download Resume (PDF)</a>
+        </div>
+    </section>
+    <section id="skills">
+        <div>
+            <div class="section-heading">Skills</div>
+            <ul>
+                <li>Python Programming</li>
+                <li>Web Development</li>
+                <li>Problem Solving</li>
+                <li>Game Development</li>
+                <li>Japanese Language</li>
+            </ul>
+        </div>
+    </section>
+    <section id="projects">
+        <div>
+            <div class="section-heading">Projects</div>
+            <div class="project">
+                <h3>First Game Project</h3>
+                <p>Developing a small mobile game as a learning project.</p>
+            </div>
+            <div class="project">
+                <h3>JLPT N5 Vocabulary Trainer</h3>
+                <p>An interactive website to help learners memorize JLPT N5 vocabulary efficiently. Features include a progress tracker, test mode, pronunciation support, and a user-friendly interface.</p>
+                <a href="jlpt trainer.html" target="_blank">View project</a>
+            </div>
+            <div class="project">
+                <h3>Simple calculator</h3>
+                <p>A simple calculator made with html as a task</p>
+                <a href="calculator.html" target="_blank">View Project</a>
+        </div>
+    </section>
+    <section id="education">
+        <div>
+            <div class="section-heading">Education</div>
+            <div class="edu-detail">
+                Bachelor of Engineering in Computer Science
+            </div>
+        </div>
+    </section>
+    <section id="contact">
+        <div>
+            <div class="section-heading">Contact</div>
+            <div class="social-icons">
+                <a href="https://github.com/Vigneshwaran-cse" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub">
+                </a>
+                <a href="mailto:vigneshwaran2006csc@gmail.com">
+                    <img src="https://cdn-icons-png.flaticon.com/512/281/281769.png" alt="Gmail">
+                </a>
+                <a href="https://www.instagram.com/slnt_shadow_?igsh=MXI2eHBvbndvd2s3dw==" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61565642235149&mibextid=ZbWKwL" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
+                </a>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2025 Vigneshwaran's Portfolio. All rights reserved.</p>
+    </footer>
+    <script>
+        const navLinks = document.querySelectorAll('nav a');
+        const sections = document.querySelectorAll('section');
+        let prevIndex = 0;
+        navLinks.forEach((link, idx) => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                navLinks.forEach(nav => nav.classList.remove('active'));
+                link.classList.add('active');
+                sections.forEach(sec=>{
+                    sec.classList.remove('active','slide-left');
+                });
+                const target = link.getAttribute('data-section');
+                const activeSection = document.getElementById(target);
+                let newIndex = Array.from(navLinks).indexOf(link);
+                if (newIndex<prevIndex) activeSection.classList.add('slide-left');
+                setTimeout(()=>{
+                    activeSection.classList.add('active');
+                    document.querySelector('#about .profile-pic').style.display = (target==='about')?'block':'none';
+                },40);
+                prevIndex = newIndex;
+                window.scrollTo(0, 0);
+            });
+        });
+        document.addEventListener("DOMContentLoaded",()=>{
+            document.querySelector('#about .profile-pic').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JLPT N5 Vocabulary Trainer</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      padding: 20px; 
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4); 
+      color: #333; 
+    }
+    h1 { 
+      color: #fff; 
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); 
+    }
+    .menu-btn { 
+      position: absolute; 
+      top: 10px; 
+      left: 10px; 
+      font-size: 24px; 
+      cursor: pointer; 
+    }
+    .menu { 
+      position: absolute; 
+      top: 40px; 
+      left: 10px; 
+      background: rgba(255, 255, 255, 0.9); 
+      padding: 10px; 
+      border-radius: 5px; 
+      display: none; 
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    .menu a { 
+      display: block; 
+      padding: 8px; 
+      text-decoration: none; 
+      color: #333; 
+      cursor: pointer;
+    }
+    .menu a:hover { 
+      background: #ddd; 
+    }
+    .button { 
+      padding: 12px 24px; 
+      font-size: 18px; 
+      margin: 10px; 
+      cursor: pointer; 
+      border: none; 
+      border-radius: 8px; 
+      color: white; 
+      background: #ff7676; 
+      transition: 0.3s; 
+    }
+    .button:hover { 
+      background: #ff5252; 
+    }
+    .flashcard, .quiz { 
+      display: none; 
+      margin-top: 20px; 
+      padding: 20px; 
+      background: rgba(255, 255, 255, 0.8); 
+      border-radius: 10px; 
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+    }
+    #word { 
+      font-size: 28px; 
+      font-weight: bold; 
+      margin-bottom: 20px; 
+      cursor: pointer; 
+    }
+    .options button { 
+      display: block; 
+      margin: 5px auto; 
+      padding: 12px; 
+      width: auto;
+      border-radius: 5px;
+      background: white;
+    }
+    #score { 
+      display: none; /* Hide score by default */
+    }
+  </style>
+</head>
+<body onclick="hideMenu(event)">
+  <div class="menu-btn" onclick="toggleMenu(event)">☰</div>
+
+  <div class="menu" id="menu">
+    <a href="#" onclick="selectCategory('all')">All Words</a>
+    <a href="#" onclick="selectCategory('animals')">Animals</a>
+    <a href="#" onclick="selectCategory('directions')">Directions</a>
+    <a href="#" onclick="selectCategory('food')">Food</a>
+    <a href="#" onclick="showAbout()">About App</a>
+  </div>
+
+  <h1>JLPT N5 Vocabulary Trainer</h1>
+  <button class="button" id="learnBtn" onclick="startLearn()">Learn</button>
+  <button class="button" onclick="startTest()">Test</button>
+
+  <p id="progress">Progress: 0 / 1357</p>
+  <p id="score">Score: 0</p>
+
+  <div class="flashcard" id="flashcard">
+    <button class="button" onclick="prevWord()">← Previous</button>
+    <p id="word" onclick="speakWord()"></p>
+    <p id="meaning"></p>
+    <button class="button" onclick="nextWord()">Next →</button>
+  </div>
+
+  <div class="quiz" id="quiz">
+    <p id="quizWord" onclick="speakWord()"></p>
+    <div class="options" id="options"></div>
+    <p id="result"></p>
+    <button class="button" onclick="nextQuestion()">Next Question</button>
+    <button class="button" onclick="reviewMistakes()">Review Mistakes</button>
+  </div>
+
+  <script>
+    let allVocabularies = {
+      all: [
+        { word: "北 (きた - kita)", meaning: "North", category: "Directions" },
+        { word: "南 (みなみ - minami)", meaning: "South", category: "Directions" },
+        { word: "西 (にし - nishi)", meaning: "West", category: "Directions" },
+        { word: "東 (ひがし - higashi)", meaning: "East", category: "Directions" },
+        { word: "犬 (いぬ - inu)", meaning: "Dog", category: "Animals" },
+        { word: "猫 (ねこ - neko)", meaning: "Cat", category: "Animals" },
+        { word: "鳥 (とり - tori)", meaning: "Bird", category: "Animals" },
+        { word: "魚 (さかな - sakana)", meaning: "Fish", category: "Animals" },
+        { word: "ご飯 (ごはん - gohan)", meaning: "Rice", category: "Food" },
+        { word: "水 (みず - mizu)", meaning: "Water", category: "Food" },
+        { word: "茶 (ちゃ - cha)", meaning: "Tea", category: "Food" },
+        { word: "車 (くるま - kuruma)", meaning: "Car", category: "Vehicles" },
+        { word: "電車 (でんしゃ - densha)", meaning: "Train", category: "Vehicles" },
+        { word: "飛行機 (ひこうき - hikouki)", meaning: "Airplane", category: "Vehicles" },
+        { word: "本 (ほん - hon)", meaning: "Book", category: "Objects" },
+        { word: "鉛筆 (えんぴつ - enpitsu)", meaning: "Pencil", category: "Objects" },
+        { word: "机 (つくえ - tsukue)", meaning: "Desk", category: "Objects" },
+        { word: "椅子 (いす - isu)", meaning: "Chair", category: "Objects" },
+        { word: "時計 (とけい - tokei)", meaning: "Clock", category: "Objects" },
+        { word: "手 (て - te)", meaning: "Hand", category: "Body Parts" },
+        { word: "足 (あし - ashi)", meaning: "Leg", category: "Body Parts" },
+        { word: "目 (め - me)", meaning: "Eye", category: "Body Parts" },
+        { word: "耳 (みみ - mimi)", meaning: "Ear", category: "Body Parts" },
+        { word: "口 (くち - kuchi)", meaning: "Mouth", category: "Body Parts" },
+        { word: "空 (そら - sora)", meaning: "Sky", category: "Nature" },
+        { word: "山 (やま - yama)", meaning: "Mountain", category: "Nature" },
+        { word: "川 (かわ - kawa)", meaning: "River", category: "Nature" },
+        { word: "花 (はな - hana)", meaning: "Flower", category: "Nature" },
+        { word: "太陽 (たいよう - taiyou)", meaning: "Sun", category: "Nature" },
+        { word: "学校 (がっこう - gakkou)", meaning: "School", category: "Places" },
+        { word: "病院 (びょういん - byouin)", meaning: "Hospital", category: "Places" },
+        { word: "駅 (えき - eki)", meaning: "Train Station", category: "Places" },
+        { word: "公園 (こうえん - kouen)", meaning: "Park", category: "Places" },
+        { word: "映画館 (えいがかん - eigakan)", meaning: "Cinema", category: "Places" },
+        { word: "先生 (せんせい - sensei)", meaning: "Teacher", category: "People" },
+        { word: "学生 (がくせい - gakusei)", meaning: "Student", category: "People" },
+        { word: "医者 (いしゃ - isha)", meaning: "Doctor", category: "People" },
+        { word: "警察官 (けいさつかん - keisatsukan)", meaning: "Police Officer", category: "People" },
+        { word: "春 (はる - haru)", meaning: "Spring", category: "Seasons" },
+        { word: "夏 (なつ - natsu)", meaning: "Summer", category: "Seasons" },
+        { word: "秋 (あき - aki)", meaning: "Autumn", category: "Seasons" },
+        { word: "冬 (ふゆ - fuyu)", meaning: "Winter", category: "Seasons" },
+        { word: "月曜日 (げつようび - getsuyoubi)", meaning: "Monday", category: "Days of the Week" },
+        { word: "火曜日 (かようび - kayoubi)", meaning: "Tuesday", category: "Days of the Week" },
+        { word: "水曜日 (すいようび - suiyoubi)", meaning: "Wednesday", category: "Days of the Week" },
+        { word: "木曜日 (もくようび - mokuyoubi)", meaning: "Thursday", category: "Days of the Week" },
+        { word: "金曜日 (きんようび - kinyoubi)", meaning: "Friday", category: "Days of the Week" },
+        { word: "土曜日 (どようび - doyoubi)", meaning: "Saturday", category: "Days of the Week" },
+        { word: "日曜日 (にちようび - nichiyoubi)", meaning: "Sunday", category: "Days of the Week" },
+        { word: "朝 (あさ - asa)", meaning: "Morning", category: "Time" },
+        { word: "昼 (ひる - hiru)", meaning: "Noon", category: "Time" },
+        { word: "夜 (よる - yoru)", meaning: "Night", category: "Time" },
+        { word: "時計 (とけい - tokei)", meaning: "Clock", category: "Time" },
+        { word: "秒 (びょう - byou)", meaning: "Second", category: "Time" },
+        { word: "分 (ふん - fun)", meaning: "Minute", category: "Time" },
+        { word: "時 (じ - ji)", meaning: "Hour", category: "Time" },
+        { word: "一 (いち - ichi)", meaning: "One", category: "Numbers" },
+        { word: "二 (に - ni)", meaning: "Two", category: "Numbers" },
+        { word: "三 (さん - san)", meaning: "Three", category: "Numbers" },
+        { word: "四 (し / よん - shi / yon)", meaning: "Four", category: "Numbers" },
+        { word: "五 (ご - go)", meaning: "Five", category: "Numbers" },
+        { word: "六 (ろく - roku)", meaning: "Six", category: "Numbers" },
+        { word: "七 (しち / なな - shichi / nana)", meaning: "Seven", category: "Numbers" },
+        { word: "八 (はち - hachi)", meaning: "Eight", category: "Numbers" },
+        { word: "九 (きゅう / く - kyuu / ku)", meaning: "Nine", category: "Numbers" },
+        { word: "十 (じゅう - juu)", meaning: "Ten", category: "Numbers" },
+        { word: "百 (ひゃく - hyaku)", meaning: "Hundred", category: "Numbers" },
+        { word: "千 (せん - sen)", meaning: "Thousand", category: "Numbers" },
+        { word: "万 (まん - man)", meaning: "Ten Thousand", category: "Numbers" },
+        { word: "円 (えん - en)", meaning: "Yen", category: "Currency" },
+        { word: "ドル (どる - doru)", meaning: "Dollar", category: "Currency" },
+        { word: "ユーロ (ゆーろ - yūro)", meaning: "Euro", category: "Currency" },
+        { word: "病気 (びょうき - byouki)", meaning: "Sickness", category: "Medical" },
+        { word: "薬 (くすり - kusuri)", meaning: "Medicine", category: "Medical" },
+        { word: "元気 (げんき - genki)", meaning: "Healthy", category: "Medical" },
+        { word: "風邪 (かぜ - kaze)", meaning: "Cold (illness)", category: "Medical" },
+        { word: "勉強 (べんきょう - benkyou)", meaning: "Study", category: "School" },
+        { word: "宿題 (しゅくだい - shukudai)", meaning: "Homework", category: "School" },
+        { word: "教室 (きょうしつ - kyoushitsu)", meaning: "Classroom", category: "School" },
+        { word: "試験 (しけん - shiken)", meaning: "Exam", category: "School" }
+      ],
+      directions: [],
+      animals: [],
+      food: [],
+      vehicles: [],
+      objects: [],
+      bodyParts: [],
+      nature: [],
+      places: [],
+      people: [],
+      seasons: [],
+      days: [],
+      time: [],
+      numbers: [],
+      currency: [],
+      medical: [],
+      school: []
+    };
+
+                // Automatically fill subcategories
+    allVocabularies.directions = allVocabularies.all.filter(v => v.category === "Directions");
+    allVocabularies.animals = allVocabularies.all.filter(v => v.category === "Animals");
+    allVocabularies.food = allVocabularies.all.filter(v => v.category === "Food");
+    allVocabularies.vehicles = allVocabularies.all.filter(v => v.category === "Vehicles");
+    allVocabularies.objects = allVocabularies.all.filter(v => v.category === "Objects");
+    allVocabularies.bodyParts = allVocabularies.all.filter(v => v.category === "Body Parts");
+    allVocabularies.nature = allVocabularies.all.filter(v => v.category === "Nature");
+    allVocabularies.places = allVocabularies.all.filter(v => v.category === "Places");
+    allVocabularies.people = allVocabularies.all.filter(v => v.category === "People");
+    allVocabularies.seasons = allVocabularies.all.filter(v => v.category === "Seasons");
+    allVocabularies.days = allVocabularies.all.filter(v => v.category === "Days of the Week");
+    allVocabularies.time = allVocabularies.all.filter(v => v.category === "Time");
+    allVocabularies.numbers = allVocabularies.all.filter(v => v.category === "Numbers");
+    allVocabularies.currency = allVocabularies.all.filter(v => v.category === "Currency");
+    allVocabularies.medical = allVocabularies.all.filter(v => v.category === "Medical");
+    allVocabularies.school = allVocabularies.all.filter(v => v.category === "School");
+
+    let vocabularies = [...allVocabularies.all];
+    let learnedWords = [];
+    let currentIndex = 0;
+    let score = 0;
+    let mistakes = [];
+
+    // Function to dynamically generate the menu
+    function generateMenu() {
+      const menu = document.getElementById("menu");
+      menu.innerHTML = ""; // Clear existing menu items
+
+      // Add "All Words" option
+      const allWordsLink = document.createElement("a");
+      allWordsLink.href = "#";
+      allWordsLink.innerText = "All Words";
+      allWordsLink.onclick = () => selectCategory("all");
+      menu.appendChild(allWordsLink);
+
+      // Add subcategories dynamically
+      for (const category in allVocabularies) {
+        if (category !== "all" && allVocabularies[category].length > 0) {
+          const categoryLink = document.createElement("a");
+          categoryLink.href = "#";
+          categoryLink.innerText = category.charAt(0).toUpperCase() + category.slice(1); // Capitalize first letter
+          categoryLink.onclick = () => selectCategory(category);
+          menu.appendChild(categoryLink);
+        }
+      }
+
+      // Add "About App" option
+      const aboutLink = document.createElement("a");
+      aboutLink.href = "#";
+      aboutLink.innerText = "About App";
+      aboutLink.onclick = showAbout;
+      menu.appendChild(aboutLink);
+    }
+
+    // Call generateMenu() to populate the menu when the page loads
+    generateMenu();
+
+    // Toggle menu display
+    function toggleMenu(event) {
+      event.stopPropagation();
+      const menu = document.getElementById("menu");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    // Hide menu if click outside
+    function hideMenu(event) {
+      if (!event.target.closest('.menu') && !event.target.closest('.menu-btn')) {
+        document.getElementById("menu").style.display = "none";
+      }
+    }
+
+    // Select a category (subtopic)
+    function selectCategory(category) {
+      if (allVocabularies[category]) {
+        vocabularies = [...allVocabularies[category]];
+      } else {
+        vocabularies = [...allVocabularies.all];
+      }
+      currentIndex = 0;
+      learnedWords = []; // Reset learned words when selecting a new category
+      updateProgress();
+      toggleMenu(event);
+      startLearn();
+    }
+
+    // Show About App information
+    function showAbout() {
+      alert(
+        "JLPT N5 Vocabulary Trainer\n\n" +
+        "This app helps you learn and practice vocabulary for the JLPT N5 exam.\n" +
+        "Features:\n" +
+        "- Learn mode: Study words with flashcards.\n" +
+        "- Test mode: Test your knowledge with quizzes.\n" +
+        "- Track progress and review mistakes.\n\n" +
+        "Good luck with your studies!" +
+        "this app is under development. more vocabularies will be added soon"
+      );
+    }
+
+    // Start Learning Mode
+    function startLearn() {
+      document.getElementById("flashcard").style.display = "block";
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("learnBtn").style.display = "block";
+      nextWord();
+    }
+
+    // Show next word in learning mode and save it as learned
+    function nextWord() {
+      if (currentIndex < vocabularies.length) {
+        const currentWord = vocabularies[currentIndex];
+        document.getElementById("word").innerText = currentWord.word;
+        document.getElementById("meaning").innerText = currentWord.meaning;
+        if (!learnedWords.includes(currentWord)) {
+          learnedWords.push(currentWord);
+        }
+        currentIndex++;
+      }
+      updateProgress();
+    }
+
+    // Show previous word in learning mode
+    function prevWord() {
+      if (currentIndex > 1) {
+        currentIndex--;
+        const currentWord = vocabularies[currentIndex - 1];
+        document.getElementById("word").innerText = currentWord.word;
+        document.getElementById("meaning").innerText = currentWord.meaning;
+      }
+    }
+
+    // Start Test Mode using only learned words
+    function startTest() {
+      if (learnedWords.length === 0) {
+        alert("You need to learn words before testing!");
+        return;
+      }
+      vocabularies = [...learnedWords];
+      currentIndex = 0;
+      mistakes = []; // Reset mistakes array
+      document.getElementById("flashcard").style.display = "none";
+      document.getElementById("quiz").style.display = "block";
+      document.getElementById("score").style.display = "block";
+      document.getElementById("learnBtn").style.display = "none";
+      nextQuestion();
+    }
+
+    // Update progress display
+    function updateProgress() {
+      const totalWords = vocabularies.length;
+      const displayIndex = Math.min(currentIndex, totalWords);
+      document.getElementById("progress").innerText = `Progress: ${displayIndex} / ${totalWords}`;
+    }
+
+    // Read the word aloud when clicked
+    function speakWord() {
+      const wordElement = document.getElementById("word") || document.getElementById("quizWord");
+      if (!wordElement) return;
+      const word = wordElement.innerText;
+      if (!word) return;
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'ja-JP';
+      speechSynthesis.speak(utterance);
+    }
+
+    // Show next question in test mode
+    function nextQuestion() {
+      if (currentIndex >= vocabularies.length) {
+        currentIndex = 0;
+      }
+      const currentWord = vocabularies[currentIndex];
+      document.getElementById("quizWord").innerText = currentWord.word;
+      // Create multiple choice options
+      let options = vocabularies.slice();
+      options = options.sort(() => Math.random() - 0.5).slice(0, 3);
+      options.push(currentWord);
+      options = options.sort(() => Math.random() - 0.5);
+      let optionsHtml = "";
+      options.forEach(option => {
+        optionsHtml += `<button onclick="checkAnswer('${option.meaning}', '${currentWord.meaning}')">${option.meaning}</button>`;
+      });
+      document.getElementById("options").innerHTML = optionsHtml;
+      document.getElementById("result").innerText = "";
+      currentIndex++;
+      updateProgress();
+    }
+
+    // Check the selected answer in test mode
+    function checkAnswer(selected, correct) {
+      if (selected === correct) {
+        score++;
+        document.getElementById("result").innerText = "Correct! ✅";
+      } else {
+        document.getElementById("result").innerText = "Wrong ❌ The correct answer is: " + correct;
+        mistakes.push(vocabularies[currentIndex - 1]);
+      }
+      updateScore();
+    }
+
+    // Update score display
+    function updateScore() {
+      document.getElementById("score").innerText = `Score: ${score}`;
+    }
+
+    // Review mistakes in test mode
+    function reviewMistakes() {
+      if (mistakes.length === 0) {
+        alert("No mistakes to review!");
+        return;
+      }
+      vocabularies = [...mistakes];
+      currentIndex = 0;
+      mistakes = []; // Reset mistakes array
+      nextQuestion();
+    }
+    // Improvement 1: Progress Tracking with localStorage
+    function saveProgress() {
+      localStorage.setItem("learnedWords", JSON.stringify(learnedWords));
+      localStorage.setItem("score", score.toString());
+    }
+
+    function loadProgress() {
+      const savedLearnedWords = localStorage.getItem("learnedWords");
+      const savedScore = localStorage.getItem("score");
+
+      if (savedLearnedWords) {
+        learnedWords = JSON.parse(savedLearnedWords);
+      }
+      if (savedScore) {
+        score = parseInt(savedScore);
+        updateScore();
+      }
+    }
+
+    window.onload = function () {
+      loadProgress();
+      generateMenu();
+    };
+
+    // Improvement 2: Pronunciation (Audio)
+    function speakWord() {
+      const wordElement = document.getElementById("word") || document.getElementById("quizWord");
+      if (!wordElement) return;
+      const word = wordElement.innerText.split(" ")[0]; // Extract the word (e.g., "北" from "北 (きた - kita)")
+      if (!word) return;
+
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'ja-JP'; // Set language to Japanese
+      utterance.rate = 0.8; // Adjust speaking speed
+      speechSynthesis.speak(utterance);
+    }
+
+    function addSpeakerIcon() {
+      const wordElement = document.getElementById("word");
+      const quizWordElement = document.getElementById("quizWord");
+
+      if (wordElement) {
+        const speakerIcon = document.createElement("span");
+        speakerIcon.innerHTML = "🔊";
+        speakerIcon.style.cursor = "pointer";
+        speakerIcon.style.marginLeft = "10px";
+        speakerIcon.onclick = speakWord;
+        wordElement.appendChild(speakerIcon);
+      }
+
+      if (quizWordElement) {
+        const speakerIcon = document.createElement("span");
+        speakerIcon.innerHTML = "🔊";
+        speakerIcon.style.cursor = "pointer";
+        speakerIcon.style.marginLeft = "10px";
+        speakerIcon.onclick = speakWord;
+        quizWordElement.appendChild(speakerIcon);
+      }
+    }
+
+    // Update nextWord() and nextQuestion() to include addSpeakerIcon()
+    function nextWord() {
+      if (currentIndex < vocabularies.length) {
+        const currentWord = vocabularies[currentIndex];
+        document.getElementById("word").innerText = currentWord.word;
+        document.getElementById("meaning").innerText = currentWord.meaning;
+        if (!learnedWords.includes(currentWord)) {
+          learnedWords.push(currentWord);
+          saveProgress(); // Save progress when a new word is learned
+        }
+        currentIndex++;
+        addSpeakerIcon(); // Add speaker icon
+      }
+      updateProgress();
+    }
+
+    function nextQuestion() {
+      if (currentIndex >= vocabularies.length) {
+        currentIndex = 0;
+      }
+      const currentWord = vocabularies[currentIndex];
+      document.getElementById("quizWord").innerText = currentWord.word;
+      addSpeakerIcon(); // Add speaker icon
+
+      // Create multiple choice options
+      let options = vocabularies.slice();
+      options = options.sort(() => Math.random() - 0.5).slice(0, 3);
+      options.push(currentWord);
+      options = options.sort(() => Math.random() - 0.5);
+      let optionsHtml = "";
+      options.forEach(option => {
+        optionsHtml += `<button onclick="checkAnswer('${option.meaning}', '${currentWord.meaning}')">${option.meaning}</button>`;
+      });
+      document.getElementById("options").innerHTML = optionsHtml;
+      document.getElementById("result").innerText = "";
+      currentIndex++;
+      updateProgress();
+    }
+  </script>
+</body>
+</html></script>
+</body>
+</html>
